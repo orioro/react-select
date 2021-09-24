@@ -1,15 +1,18 @@
 import { useMemo, useState } from 'react'
 import { Option, FnValueToString } from './types'
 import { defaultValueToString } from './util'
-import slugify from '@sindresorhus/slugify'
+
+type FnPrepareString = (str: string) => string
+
+const defaultPrepareString: FnPrepareString = (str) => str.toLowerCase()
 
 export const optionsSearcher =
   ({
     valueToString = defaultValueToString,
-    prepareString = slugify,
+    prepareString = defaultPrepareString,
   }: {
     valueToString?: FnValueToString
-    prepareString?: (input: string) => string
+    prepareString?: FnPrepareString
   }) =>
   (options: Option[], searchText: string): Option[] =>
     searchText

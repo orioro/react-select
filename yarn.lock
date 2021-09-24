@@ -2364,7 +2364,6 @@ __metadata:
     "@rollup/plugin-babel": ^5.3.0
     "@rollup/plugin-commonjs": ^20.0.0
     "@rollup/plugin-node-resolve": ^13.0.4
-    "@sindresorhus/slugify": ^2.1.0
     "@storybook/addon-actions": ^6.3.7
     "@storybook/addon-essentials": ^6.3.7
     "@storybook/addon-links": ^6.3.7
@@ -2635,26 +2634,6 @@ __metadata:
   version: 0.14.0
   resolution: "@sindresorhus/is@npm:0.14.0"
   checksum: 971e0441dd44ba3909b467219a5e242da0fc584048db5324cfb8048148fa8dcc9d44d71e3948972c4f6121d24e5da402ef191420d1266a95f713bb6d6e59c98a
-  languageName: node
-  linkType: hard
-
-"@sindresorhus/slugify@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "@sindresorhus/slugify@npm:2.1.0"
-  dependencies:
-    "@sindresorhus/transliterate": ^1.0.0
-    escape-string-regexp: ^5.0.0
-  checksum: b2411b597ef7c74f42848a8960c614eaac7b24c8c329f9f150ba62e4a9b8ac438aaa65577ae999fdf42d2e72549eab1d3376ebe12681a7172a437a2c87bed618
-  languageName: node
-  linkType: hard
-
-"@sindresorhus/transliterate@npm:^1.0.0":
-  version: 1.4.0
-  resolution: "@sindresorhus/transliterate@npm:1.4.0"
-  dependencies:
-    escape-string-regexp: ^5.0.0
-    lodash.deburr: ^4.1.0
-  checksum: 31774ca642b65ac2cb819a9737b31c49fa8846367c46d08fcc20fddb193351f6954c20e239f9be7b60ffc2d7f2ce050e314165724610e882379686db032191d9
   languageName: node
   linkType: hard
 
@@ -7954,13 +7933,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"escape-string-regexp@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "escape-string-regexp@npm:5.0.0"
-  checksum: 20daabe197f3cb198ec28546deebcf24b3dbb1a5a269184381b3116d12f0532e06007f4bc8da25669d6a7f8efb68db0758df4cd981f57bc5b57f521a3e12c59e
-  languageName: node
-  linkType: hard
-
 "escodegen@npm:^2.0.0":
   version: 2.0.0
   resolution: "escodegen@npm:2.0.0"
@@ -11849,13 +11821,6 @@ fsevents@^1.2.7:
   version: 4.0.8
   resolution: "lodash.debounce@npm:4.0.8"
   checksum: a3f527d22c548f43ae31c861ada88b2637eb48ac6aa3eb56e82d44917971b8aa96fbb37aa60efea674dc4ee8c42074f90f7b1f772e9db375435f6c83a19b3bc6
-  languageName: node
-  linkType: hard
-
-"lodash.deburr@npm:^4.1.0":
-  version: 4.1.0
-  resolution: "lodash.deburr@npm:4.1.0"
-  checksum: 6e2012315c20a4d8ed4f1884ed4b8e6b0093c6355a87bfd95ecf25a5243c8c88d747d67375d52cb87ebc99d090935ed8dc3814c8e661e3275a6dbe02b68efc99
   languageName: node
   linkType: hard
 
