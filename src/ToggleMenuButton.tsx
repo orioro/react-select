@@ -1,15 +1,16 @@
 import React from 'react'
-import { css, cx } from '@emotion/css'
 
-import { ToggleMenuButtonProps } from './types'
+import { ToggleMenuButtonProps, ComponentStyleSpec } from './types'
+
+export const ToggleMenuButtonStyle = (): ComponentStyleSpec => null
 
 export const ToggleMenuButton = ({
+  className,
   buttonProps,
   children,
-  style
 }: ToggleMenuButtonProps): React.ReactElement => (
   <button
-    className={cx(css([``, style]))}
+    className={className}
     type='button'
     aria-label='toggle menu'
     {...buttonProps}

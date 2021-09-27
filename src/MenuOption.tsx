@@ -1,26 +1,41 @@
 import React from 'react'
-import { css, cx } from '@emotion/css'
+import { css } from '@emotion/css'
+import { DEFAULT_PADDING } from './constants'
 
-import { MenuOptionProps } from './types'
+import {
+  MenuOptionProps,
+  MenuOptionStyleContext,
+  ComponentStyleSpec,
+  PlainObject,
+} from './types'
+
+const DEFAULT_HIGHLIGHT_STYLE = {
+  backgroundColor: '#bde4ff'
+}
+
+export type MenuOptionStyleProps = {
+  padding?: string | number
+  highlightStyle?: string | PlainObject
+}
+
+export const MenuOptionStyle =
+  ({
+    padding = DEFAULT_PADDING,
+    highlightStyle = DEFAULT_HIGHLIGHT_STYLE,
+  }: MenuOptionStyleProps = {}): ComponentStyleSpec<MenuOptionStyleContext> =>
+  ({ isHighlighted }) =>
+    css([
+      `
+        padding: ${padding};
+        cursor: pointer;
+      `,
+      isHighlighted ? highlightStyle : {},
+    ])
 
 export const MenuOption = ({
   option,
   valueToString,
-  isHighlighted,
-  style,
+  className,
 }: MenuOptionProps): React.ReactElement => (
-  <div
-    className={cx(
-      css([
-        `
-          padding: 4px 6px;
-          cursor: pointer;
-          background-color: ${isHighlighted ? 'cyan' : 'transparent'}
-        `,
-        style,
-      ])
-    )}
-  >
-    {valueToString(option)}
-  </div>
+  <div className={className}>{valueToString(option)}</div>
 )

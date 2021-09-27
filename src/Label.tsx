@@ -1,14 +1,15 @@
 import React from 'react'
-import { css, cx } from '@emotion/css'
 
-import { LabelProps } from './types'
+import { LabelProps, ComponentStyleSpec } from './types'
+
+export const LabelStyle = (): ComponentStyleSpec => null
 
 export const Label = ({
-  label,
+  children,
   labelProps,
-  style
+  className,
 }: LabelProps): React.ReactElement => (
-  <label className={cx(css([``, style]))} {...labelProps}>
-    {label}
+  <label className={className} {...labelProps}>
+    {children}
   </label>
 )

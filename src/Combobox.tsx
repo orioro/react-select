@@ -1,10 +1,19 @@
 import React from 'react'
-import { css, cx } from '@emotion/css'
+import { css } from '@emotion/css'
 
-import { ComboboxProps } from './types'
+import { ComboboxProps, ComponentStyleSpec } from './types'
 
-export const Combobox = ({ children, style, comboboxProps }: ComboboxProps) => (
-  <div className={cx(css([{ display: 'flex' }, style]))} {...comboboxProps}>
+export const ComboboxStyle =
+  (): ComponentStyleSpec =>
+  (context) =>
+    css({ display: 'flex' })
+
+export const Combobox = ({
+  children,
+  className,
+  comboboxProps,
+}: ComboboxProps) => (
+  <div className={className} {...comboboxProps}>
     {children}
   </div>
 )

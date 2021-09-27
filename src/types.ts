@@ -2,7 +2,7 @@ import type { ReactElement, ReactNode } from 'react'
 
 type NotUndefined = null | string | number | boolean | object | symbol
 
-type _AnyObject = {
+export type PlainObject = {
   [key: string]: any
 }
 
@@ -22,58 +22,50 @@ export type SelectContext = {
   valueToString: FnValueToString
 }
 
-export type LabelProps = SelectContext & {
-  label: string
-  labelProps: _AnyObject
-  style: ComputedComponentStyle
+type CommonSelectComponentProps = SelectContext & {
+  className: string
 }
-export type ComboboxProps = SelectContext & {
-  comboboxProps: _AnyObject
+
+export type LabelProps = CommonSelectComponentProps & {
   children: ReactNode
-  style: ComputedComponentStyle
+  labelProps: PlainObject
 }
-export type TextInputProps = SelectContext & {
-  inputProps: _AnyObject
-  style: ComputedComponentStyle
-}
-export type ToggleMenuButtonProps = SelectContext & {
-  buttonProps: _AnyObject
+export type ComboboxProps = CommonSelectComponentProps & {
+  comboboxProps: PlainObject
   children: ReactNode
-  style: ComputedComponentStyle
 }
-export type MenuProps = SelectContext & {
-  menuProps: _AnyObject
-  getOptionDomProps: (option: any) => _AnyObject
-  style: ComputedComponentStyle
+export type TextInputProps = CommonSelectComponentProps & {
+  inputProps: PlainObject
+}
+export type ToggleMenuButtonProps = CommonSelectComponentProps & {
+  buttonProps: PlainObject
+  children: ReactNode
+}
+export type MenuProps = CommonSelectComponentProps & {
+  menuProps: PlainObject
+  getOptionDomProps: (option: any) => PlainObject
   renderOption: (props: { option: any; index: number }) => ReactElement
 }
-export type MenuOptionProps = SelectContext & {
+export type MenuOptionProps = CommonSelectComponentProps & {
   isHighlighted: boolean
-  style: ComputedComponentStyle
   option: any
+  index: number
+}
+export type InfoBoxProps = CommonSelectComponentProps & {
+  children: ReactNode
 }
 
-export type ComponentStyleSpec<T> =
+export type ComponentStyleSpec<StyleContextType = SelectContext> =
+  | null
   | string
-  | ((props: T) => string | _AnyObject)
-  | _AnyObject
-export type ComputedComponentStyle = string | _AnyObject
-export type Component<T> = (props: T) => ReactElement
+  | PlainObject
+  | ((context: StyleContextType) => string | null)
+export type Component<PropsType> = (props: PropsType) => ReactElement
 
-export type SelectStyles = {
-  Select?: ComponentStyleSpec<SelectContext>
-  Label?: ComponentStyleSpec<SelectContext>
-  Combobox?: ComponentStyleSpec<SelectContext>
-  TextInput?: ComponentStyleSpec<SelectContext>
-  ToggleMenuButton?: ComponentStyleSpec<SelectContext>
-  Menu?: ComponentStyleSpec<SelectContext>
-  MenuOption?: ComponentStyleSpec<
-    SelectContext & {
-      isHighlighted: boolean
-      option: Option
-      index: number
-    }
-  >
+export type MenuOptionStyleContext = SelectContext & {
+  isHighlighted: boolean
+  option: Option
+  index: number
 }
 
 export type SelectComponents = {
@@ -83,29 +75,36 @@ export type SelectComponents = {
   ToggleMenuButton: Component<ToggleMenuButtonProps>
   Menu: Component<MenuProps>
   MenuOption: Component<MenuOptionProps>
+  InfoBox: Component<InfoBoxProps>
 }
 
-export type FnOnSetSearchText = (newSearchText: string) => void
+export type SelectComponentStyleSpecs = {
+  Container: ComponentStyleSpec
+  Label: ComponentStyleSpec
+  Combobox: ComponentStyleSpec
+  TextInput: ComponentStyleSpec
+  ToggleMenuButton: ComponentStyleSpec
+  Menu: ComponentStyleSpec
+  MenuOption: ComponentStyleSpec<MenuOptionStyleContext>
+}
+
+export type FnOnSearchTextChange = (newSearchText: string) => void
 
 export type SelectProps = {
-  className?: string
   valueToString?: FnValueToString
   options: Option[]
-  label: string
+  label: ReactNode
+  info: ReactNode
 
   value: NotUndefined
   onSetValue: (newValue: any) => void
 
-  searchText: string
-  onSetSearchText: FnOnSetSearchText
+  onSearchTextChange: FnOnSearchTextChange
 
-  components?: {
-    Label?: Component<LabelProps>
-    Combobox?: Component<ComboboxProps>
-    TextInput?: Component<TextInputProps>
-    ToggleMenuButton?: Component<ToggleMenuButtonProps>
-    Menu?: Component<MenuProps>
-    MenuOption?: Component<MenuOptionProps>
-  }
-  styles?: SelectStyles
+  //
+  // About Partial<T>
+  // https://www.typescriptlang.org/docs/handbook/utility-types.html#partialtype
+  //
+  components?: Partial<SelectComponents>
+  classNames?: Partial<SelectComponentStyleSpecs>
 }

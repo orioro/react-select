@@ -1,10 +1,16 @@
 import React from 'react'
-import { css, cx } from '@emotion/css'
+import { css } from '@emotion/css'
+import { DEFAULT_PADDING } from './constants'
 
-import { TextInputProps, SelectState } from './types'
+import { TextInputProps, ComponentStyleSpec } from './types'
 
-const commonInputStyles = `
-  padding: 4px 6px;
+export type TextInputStyleProps = {
+  padding?: string | number
+}
+
+const _commonInputStyles = ({ padding }: TextInputStyleProps) =>
+  `
+  padding: ${padding};
   font-size: inherit;
   font-family: inherit;
 
@@ -13,33 +19,38 @@ const commonInputStyles = `
   border: 1px solid black;
 `
 
-const baseStyle = `
-  position: relative;
+export const TextInputStyle =
+  ({
+    padding = DEFAULT_PADDING,
+  }: TextInputStyleProps = {}): ComponentStyleSpec =>
+  () =>
+    css(`
+    position: relative;
 
-  > input {
-    ${commonInputStyles}
-  }
+    > input {
+      ${_commonInputStyles({ padding })}
+    }
 
-  > div {
-    ${commonInputStyles}
+    > div {
+      ${_commonInputStyles({ padding })}
 
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
 
-    pointer-events: none;
-  }
-`
+      pointer-events: none;
+    }
+  `)
 
 export const TextInput = ({
+  className,
   inputProps,
   state,
   valueToString,
-  style,
 }: TextInputProps): React.ReactElement => (
-  <div className={cx(css([baseStyle, style]))}>
+  <div className={className}>
     <input {...inputProps} />
 
     {!state.isOpen && state.value && <div>{valueToString(state.value)}</div>}

@@ -1,17 +1,23 @@
 import React, { useMemo } from 'react'
-import { css, cx } from '@emotion/css'
+import { css } from '@emotion/css'
 import { useCombobox } from 'downshift'
 
-import { Label } from './Label'
-import { Combobox } from './Combobox'
-import { TextInput } from './TextInput'
-import { ToggleMenuButton } from './ToggleMenuButton'
-import { Menu } from './Menu'
-import { MenuOption } from './MenuOption'
+import { Label, LabelStyle } from './Label'
+import { Combobox, ComboboxStyle } from './Combobox'
+import { TextInput, TextInputStyle } from './TextInput'
+import { ToggleMenuButton, ToggleMenuButtonStyle } from './ToggleMenuButton'
+import { Menu, MenuStyle } from './Menu'
+import { MenuOption, MenuOptionStyle } from './MenuOption'
+import { InfoBox, InfoBoxStyle } from './InfoBox'
 
-import { defaultValueToString, componentStyle } from './util'
+import { defaultValueToString, applyIfFunction } from './util'
 
-import { SelectProps, SelectComponents } from './types'
+import {
+  SelectProps,
+  SelectComponents,
+  ComponentStyleSpec,
+  SelectComponentStyleSpecs,
+} from './types'
 
 type AnyObject = {
   [key: string]: any
@@ -45,6 +51,13 @@ const stateReducer = (
   }
 }
 
+export const ContainerStyle = (): ComponentStyleSpec =>
+  css(`
+    display: inline-flex;
+    flex-direction: column;
+    position: relative;
+  `)
+
 const defaultComponents: SelectComponents = {
   Label,
   Combobox,
@@ -52,22 +65,33 @@ const defaultComponents: SelectComponents = {
   ToggleMenuButton,
   Menu,
   MenuOption,
+  InfoBox,
+}
+
+const defaultClassNames = {
+  Container: ContainerStyle(),
+  Label: LabelStyle(),
+  Combobox: ComboboxStyle(),
+  TextInput: TextInputStyle(),
+  ToggleMenuButton: ToggleMenuButtonStyle(),
+  Menu: MenuStyle(),
+  MenuOption: MenuOptionStyle(),
+  InfoBox: InfoBoxStyle(),
 }
 
 export const Select = ({
-  className,
   label,
+  info,
   options,
   valueToString = defaultValueToString,
 
   value,
   onSetValue,
 
-  searchText,
-  onSetSearchText,
+  onSearchTextChange,
 
   components = {},
-  styles = {},
+  classNames = {},
 }: SelectProps): React.ReactElement => {
   const _components: SelectComponents = useMemo(
     () => ({
@@ -75,6 +99,14 @@ export const Select = ({
       ...components,
     }),
     [components]
+  )
+
+  const _classNames: SelectComponentStyleSpecs = useMemo(
+    () => ({
+      ...defaultClassNames,
+      ...classNames,
+    }),
+    [classNames]
   )
 
   const {
@@ -89,6 +121,7 @@ export const Select = ({
     // State
     isOpen,
     highlightedIndex,
+    inputValue: searchText,
 
     // Functions
     openMenu,
@@ -101,49 +134,41 @@ export const Select = ({
     selectedItem: value,
     onSelectedItemChange: ({ selectedItem }) => onSetValue(selectedItem),
 
-    inputValue: searchText,
     onInputValueChange: ({ inputValue }) =>
-      onSetSearchText(inputValue ? inputValue : ''),
+      onSearchTextChange(inputValue ? inputValue : ''),
   })
 
   const selectContext = {
     valueToString,
-    state: {
-      isOpen,
-      highlightedIndex,
-      searchText,
-      value,
-      options,
-    },
+    state: useMemo(
+      () => ({
+        isOpen,
+        highlightedIndex,
+        searchText,
+        value,
+        options,
+      }),
+      [isOpen, highlightedIndex, searchText, value, options]
+    ),
   }
 
   return (
-    <div
-      className={cx(
-        css([
-          `
-            display: inline-flex;
-            flex-direction: column;
-            position: relative;
-          `,
-          componentStyle(selectContext, styles.Select),
-        ]),
-        className
-      )}
-    >
+    <div className={applyIfFunction(_classNames.Container, selectContext)}>
       <_components.Label
         {...selectContext}
+        className={applyIfFunction(_classNames.Label, selectContext)}
         labelProps={getLabelProps()}
-        label={label}
-        style={componentStyle(selectContext, styles.Label)}
-      />
+      >
+        {label}
+      </_components.Label>
       <_components.Combobox
         {...selectContext}
+        className={applyIfFunction(_classNames.Combobox, selectContext)}
         comboboxProps={getComboboxProps()}
-        style={componentStyle(selectContext, styles.Combobox)}
       >
         <_components.TextInput
           {...selectContext}
+          className={applyIfFunction(_classNames.TextInput, selectContext)}
           inputProps={getInputProps({
             onFocus: () => {
               if (!isOpen) {
@@ -151,39 +176,50 @@ export const Select = ({
               }
             },
           })}
-          style={componentStyle(selectContext, styles.TextInput)}
         />
 
         <_components.ToggleMenuButton
           {...selectContext}
+          className={applyIfFunction(
+            selectContext,
+            _classNames.ToggleMenuButton
+          )}
           buttonProps={getToggleButtonProps()}
-          style={componentStyle(selectContext, styles.ToggleMenuButton)}
         >
           &#9662;
         </_components.ToggleMenuButton>
       </_components.Combobox>
       <_components.Menu
+        className={applyIfFunction(_classNames.Menu, selectContext)}
         menuProps={getMenuProps()}
         getOptionDomProps={getItemProps}
-        renderOption={({ option, index }) => (
-          <_components.MenuOption
-            {...{
-              ...selectContext,
-              option,
-              index,
-              isHighlighted: highlightedIndex === index,
-              style: componentStyle({
-                ...selectContext,
-                isHighlighted: highlightedIndex === index,
-                option,
-                index
-              }, styles.MenuOption),
-            }}
-          />
-        )}
-        style={componentStyle(selectContext, styles.Menu)}
+        renderOption={({ option, index }) => {
+          const menuOptionContext = {
+            ...selectContext,
+            option,
+            index,
+            isHighlighted: highlightedIndex === index,
+          }
+
+          return (
+            <_components.MenuOption
+              {...menuOptionContext}
+              className={applyIfFunction(
+                _classNames.MenuOption,
+                menuOptionContext
+              )}
+            />
+          )
+        }}
         {...selectContext}
       />
+      {info && (
+        <_components.InfoBox
+          className={applyIfFunction(_classNames.InfoBox, selectContext)}
+        >
+          {info}
+        </_components.InfoBox>
+      )}
     </div>
   )
 }
