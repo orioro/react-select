@@ -23,6 +23,7 @@ const SyncTemplate = ({
     <>
       <MultiSelect
         label='Estados'
+        placeholder='Selecione os estados'
         value={value}
         onSetValue={setValue}
         {...useAutoSearch({

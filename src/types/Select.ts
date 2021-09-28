@@ -136,6 +136,7 @@ export type SelectProps<OptionType = any> = {
   valueToString?: FnValueToString<OptionType>
   options: OptionType[]
   label: ReactNode
+  placeholder?: string
   info: ReactNode
 
   value: OptionType | null

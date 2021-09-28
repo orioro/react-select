@@ -85,6 +85,7 @@ const defaultClassNames = {
 
 export const Select: SelectType = ({
   label,
+  placeholder = '',
   info,
   options,
   valueToString = defaultValueToString,
@@ -192,6 +193,7 @@ export const Select: SelectType = ({
           className={applyIfFunction(_classNames.TextInput, selectContext)}
           inputProps={getInputProps({
             ...textInputProps,
+            placeholder: value ? '' : placeholder,
             onFocus: () => {
               if (!isOpen) {
                 openMenu()

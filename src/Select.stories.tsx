@@ -40,7 +40,7 @@ const SyncTemplate = ({
 
   return (
     <>
-      <Select {...props_} />
+      <Select placeholder='Digite para buscar' {...props_} />
       <Debug data={{ value }} />
     </>
   )

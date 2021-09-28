@@ -43,6 +43,7 @@ const AsyncTemplate = ({
     <>
       <MultiSelect
         label='Cidades'
+        placeholder='Selecione as cidades'
         value={value}
         onSetValue={setValue}
         {...props}

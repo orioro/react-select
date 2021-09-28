@@ -44,6 +44,7 @@ const AsyncTemplate = ({
     <>
       <Select
         label='Cidade'
+        placeholder='Digite para buscar'
         value={value}
         onSetValue={setValue}
         {...props}
