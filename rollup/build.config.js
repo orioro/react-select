@@ -33,6 +33,7 @@ module.exports = {
     }),
     nodeResolve({
       browser: true,
+      extensions: jsExtensions
     }),
     commonjs({}),
   ],
