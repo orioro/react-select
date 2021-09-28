@@ -14,10 +14,10 @@ module.exports = {
       file: 'dist/index.js',
       format: 'cjs',
     },
-    {
-      file: 'dist/index.mjs',
-      format: 'esm',
-    },
+    // {
+    //   file: 'dist/index.mjs',
+    //   format: 'esm',
+    // },
   ],
   watch: {},
   external: [

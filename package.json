@@ -10,7 +10,6 @@
     "url": "https://github.com/orioro/react-select.git"
   },
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
   "scripts": {
     "dev": "start-storybook -p 6006",
     "build-storybook": "build-storybook",

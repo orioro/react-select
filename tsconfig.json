@@ -18,7 +18,11 @@
     "isolatedModules": true,
     "jsx": "react"
   },
+  "include": [
+    "src/**/*"
+  ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "**/*.stories.*"
   ]
 }
