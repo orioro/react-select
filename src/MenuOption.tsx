@@ -1,11 +1,11 @@
 import React from 'react'
 import { css } from '@emotion/css'
-import { DEFAULT_PADDING } from './constants'
+import { DEFAULT_PADDING, DEFAULT_HIGHLIGHT_COLOR } from './constants'
 
 import { MenuOptionType, MenuOptionStyleType, PlainObject } from './types'
 
 const DEFAULT_HIGHLIGHT_STYLE = {
-  backgroundColor: '#bde4ff',
+  backgroundColor: DEFAULT_HIGHLIGHT_COLOR,
 }
 
 export type MenuOptionStyleProps = {

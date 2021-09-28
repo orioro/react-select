@@ -17,7 +17,7 @@ const _commonInputStyles = ({ padding }: TextInputStyleProps) =>
   display: flex;
   flex-grow: 1;
   align-items: center;
-  border: 1px solid black;
+  border: none;
 `
 
 export const TextInputStyle =
@@ -55,7 +55,6 @@ export const TextInput: TextInputType = ({
 }) => (
   <div className={className}>
     <input {...inputProps} />
-
     {!state.isOpen && state.value && <div>{valueToString(state.value)}</div>}
   </div>
 )

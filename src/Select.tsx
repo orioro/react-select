@@ -9,6 +9,7 @@ import { ToggleMenuButton, ToggleMenuButtonStyle } from './ToggleMenuButton'
 import { Menu, MenuStyle } from './Menu'
 import { MenuOption, MenuOptionStyle } from './MenuOption'
 import { InfoBox, InfoBoxStyle } from './InfoBox'
+import { ClearButton, ClearButtonStyle } from './ClearButton'
 
 import { defaultValueToString, applyIfFunction } from './util'
 
@@ -17,6 +18,7 @@ import {
   SelectComponents,
   SelectComponentStyles,
   ComponentStyleType,
+  SelectContext,
 } from './types'
 
 type AnyObject = {
@@ -66,6 +68,7 @@ const defaultComponents: SelectComponents = {
   Menu,
   MenuOption,
   InfoBox,
+  ClearButton,
 }
 
 const defaultClassNames = {
@@ -77,6 +80,7 @@ const defaultClassNames = {
   Menu: MenuStyle(),
   MenuOption: MenuOptionStyle(),
   InfoBox: InfoBoxStyle(),
+  ClearButton: ClearButtonStyle(),
 }
 
 export const Select: SelectType = ({
@@ -124,8 +128,14 @@ export const Select: SelectType = ({
     highlightedIndex,
     inputValue: searchText,
 
-    // Functions
+    // Actions
+    closeMenu,
     openMenu,
+    selectItem: selectOption,
+    setHighlightedIndex,
+    setInputValue,
+    toggleMenu,
+    reset,
   } = useCombobox({
     stateReducer,
 
@@ -140,7 +150,7 @@ export const Select: SelectType = ({
       onSearchTextChange(inputValue ? inputValue : ''),
   })
 
-  const selectContext = {
+  const selectContext: SelectContext = {
     valueToString,
     state: useMemo(
       () => ({
@@ -152,6 +162,15 @@ export const Select: SelectType = ({
       }),
       [isOpen, highlightedIndex, searchText, value, options]
     ),
+    actions: {
+      closeMenu,
+      openMenu,
+      selectOption,
+      setHighlightedIndex,
+      setInputValue,
+      toggleMenu,
+      reset,
+    },
   }
 
   return (
@@ -181,11 +200,15 @@ export const Select: SelectType = ({
           })}
         />
 
+        {(value !== null || searchText !== '') && !isOpen ? (
+          <_components.ClearButton {...selectContext} />
+        ) : null}
+
         <_components.ToggleMenuButton
           {...selectContext}
           className={applyIfFunction(
-            selectContext,
-            _classNames.ToggleMenuButton
+            _classNames.ToggleMenuButton,
+            selectContext
           )}
           buttonProps={getToggleButtonProps()}
         >

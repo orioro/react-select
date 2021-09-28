@@ -19,6 +19,7 @@ export const MenuStyle = (): SelectComponentStyleType => (context) =>
     border: ${context.state.isOpen && context.state.options.length
       ? '1px solid currentColor'
       : 'none'};
+    border-top: none;
   `
 
 export const Menu: MenuType = ({

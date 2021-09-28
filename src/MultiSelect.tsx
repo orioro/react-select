@@ -14,7 +14,7 @@ import { SelectedValue, SelectedValueStyle } from './SelectedValue'
 import { css } from '@emotion/css'
 
 export const MultiSelectStyles = (): MultiSelectComponentStyleType => css`
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
 `
 

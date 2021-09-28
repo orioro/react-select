@@ -15,6 +15,7 @@ export const SelectedValueListStyle =
       maxHeight: '200px',
       overflow: 'auto',
       border: '1px solid currentColor',
+      borderTop: 'none',
     })
 
 export const SelectedValueList: SelectedValueListType = ({

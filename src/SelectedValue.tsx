@@ -1,6 +1,7 @@
 import React from 'react'
 import { css } from '@emotion/css'
 import { DEFAULT_PADDING } from './constants'
+import { RoundButton } from './RoundButton'
 
 import { SelectedValueType, SelectedValueStyleType } from './types'
 
@@ -32,13 +33,13 @@ export const SelectedValue: SelectedValueType = ({
 }) => (
   <div className={className}>
     <div>{valueToString(value)}</div>
-    <button
+    <RoundButton
       onClick={(e) => {
         e.stopPropagation()
         onRemove(value)
       }}
     >
       ×
-    </button>
+    </RoundButton>
   </div>
 )

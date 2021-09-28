@@ -14,6 +14,7 @@ export const InfoBoxStyle =
       display: isOpen ? 'block' : 'none',
       position: 'absolute',
       backgroundColor: 'white',
+      border: '1px solid currentColor',
       top: '100%',
       padding,
       left: 0,

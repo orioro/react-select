@@ -14,9 +14,20 @@ export type SelectState<OptionType = any> = {
   options: OptionType[]
 }
 
+export type SelectActions<OptionType = any> = {
+  closeMenu: () => void
+  openMenu: () => void
+  selectOption: (option: OptionType) => void
+  setHighlightedIndex: (index: number) => void
+  setInputValue: (value: string) => void
+  toggleMenu: () => void
+  reset: () => void
+}
+
 export type SelectContext<OptionType = any> = {
   state: SelectState<OptionType>
   valueToString: FnValueToString<OptionType>
+  actions: SelectActions<OptionType>
 }
 
 export type SelectComponentType<PropsType, OptionType = any> = ComponentType<
@@ -83,6 +94,11 @@ export type InfoBoxType<OptionType = any> = SelectComponentType<
   OptionType
 >
 
+export type ClearButtonType<OptionType = any> = SelectComponentType<
+  any,
+  OptionType
+>
+
 export type SelectComponents<OptionType = any> = {
   Label: LabelType<OptionType>
   Combobox: ComboboxType<OptionType>
@@ -91,6 +107,7 @@ export type SelectComponents<OptionType = any> = {
   Menu: MenuType<OptionType>
   MenuOption: MenuOptionType<OptionType>
   InfoBox: InfoBoxType<OptionType>
+  ClearButton: ClearButtonType<OptionType>
 }
 
 export type SelectComponentStyleType<
