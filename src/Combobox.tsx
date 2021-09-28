@@ -1,18 +1,18 @@
 import React from 'react'
 import { css } from '@emotion/css'
 
-import { ComboboxProps, ComponentStyleSpec } from './types'
+import { ComboboxType, SelectComponentStyleType } from './types'
 
 export const ComboboxStyle =
-  (): ComponentStyleSpec =>
-  (context) =>
+  (): SelectComponentStyleType =>
+  (_context) =>
     css({ display: 'flex' })
 
-export const Combobox = ({
+export const Combobox: ComboboxType = ({
   children,
   className,
   comboboxProps,
-}: ComboboxProps) => (
+}) => (
   <div className={className} {...comboboxProps}>
     {children}
   </div>

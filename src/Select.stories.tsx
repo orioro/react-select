@@ -1,52 +1,21 @@
 import { Story } from '@storybook/react'
 import React, { useState } from 'react'
-import BR_ESTADOS_E_CIDADES from '../fixtures/brasil-estados-e-cidades'
 
 import { MenuOptionStyle } from './MenuOption'
 import { TextInputStyle } from './TextInput'
-import { Select, ContainerStyle } from './Select'
-import { SelectProps } from './types'
+import { Select, SelectStyle } from './Select'
+import { SelectProps, SelectContext } from './types'
 import { useAutoSearch, optionsSearcher } from './useAutoSearch'
 import { composeStyles } from './composeStyles'
 
-type Estado = {
-  sigla: string
-  nome: string
-}
+import './Select.stories.css'
 
-const ESTADOS: Estado[] = BR_ESTADOS_E_CIDADES.estados.map(
-  ({ sigla, nome }) => ({
-    sigla,
-    nome,
-  })
-)
-
-// type Cidade = {
-//   estado: string
-//   nome: string
-// }
-
-// // @ts-ignore
-// const CIDADES: Cidade[] = BR_ESTADOS_E_CIDADES.estados.reduce(
-//   // @ts-ignore
-//   (acc, estado) => [
-//     ...acc,
-//     ...estado.cidades.map((cidade) => ({
-//       estado: estado.sigla,
-//       nome: cidade,
-//     })),
-//   ],
-//   []
-// )
+import { ESTADOS, Debug } from '../test/util'
 
 export default {
-  title: 'Select',
+  title: 'Select / Sync',
   component: Select,
 }
-
-const Debug = ({ data }: { data: any }) => (
-  <pre>{JSON.stringify(data, null, '  ')}</pre>
-)
 
 const SyncTemplate = ({
   initialValue = null,
@@ -129,8 +98,11 @@ export const StyleComposition = () => (
     label='Estado'
     options={ESTADOS.map((e) => e.nome)}
     classNames={{
-      Container: composeStyles(ContainerStyle(), 'background-color: yellow'),
-      TextInput: composeStyles(
+      Container: composeStyles<SelectContext>(
+        SelectStyle(),
+        'background-color: yellow'
+      ),
+      TextInput: composeStyles<SelectContext>(
         TextInputStyle({
           padding: '20px',
         }),
@@ -158,7 +130,7 @@ export const StyleStaticClassNameOverride = () => (
     label='Estado'
     options={ESTADOS.map((e) => e.nome)}
     classNames={{
-      Container: 'Container',
+      Select: 'SomeGlobalSelector',
     }}
   />
 )

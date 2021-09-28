@@ -3,9 +3,8 @@ import { css } from '@emotion/css'
 import { DEFAULT_PADDING } from './constants'
 
 import {
-  MenuOptionProps,
-  MenuOptionStyleContext,
-  ComponentStyleSpec,
+  MenuOptionType,
+  MenuOptionStyleType,
   PlainObject,
 } from './types'
 
@@ -22,7 +21,7 @@ export const MenuOptionStyle =
   ({
     padding = DEFAULT_PADDING,
     highlightStyle = DEFAULT_HIGHLIGHT_STYLE,
-  }: MenuOptionStyleProps = {}): ComponentStyleSpec<MenuOptionStyleContext> =>
+  }: MenuOptionStyleProps = {}): MenuOptionStyleType =>
   ({ isHighlighted }) =>
     css([
       `
@@ -32,10 +31,10 @@ export const MenuOptionStyle =
       isHighlighted ? highlightStyle : {},
     ])
 
-export const MenuOption = ({
+export const MenuOption: MenuOptionType = ({
   option,
   valueToString,
   className,
-}: MenuOptionProps): React.ReactElement => (
+}) => (
   <div className={className}>{valueToString(option)}</div>
 )

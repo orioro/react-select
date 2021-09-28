@@ -1,8 +1,8 @@
 import { css } from '@emotion/css'
 import { applyIfFunction } from './util'
-import { ComponentStyleSpec } from './types'
+import { ComponentStyleType } from './types'
 
 export const composeStyles =
-  <StyleContextType>(...styles: ComponentStyleSpec<StyleContextType>[]) =>
+  <StyleContextType>(...styles: ComponentStyleType<StyleContextType>[]) =>
   (context: StyleContextType) =>
     css(styles.map((style) => applyIfFunction(style, context)))

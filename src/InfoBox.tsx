@@ -1,14 +1,14 @@
 import React from 'react'
 import { css } from '@emotion/css'
 
-import { InfoBoxProps, ComponentStyleSpec } from './types'
+import { InfoBoxType, SelectComponentStyleType } from './types'
 
 import { DEFAULT_PADDING } from './constants'
 
 export const InfoBoxStyle =
   ({
     padding = DEFAULT_PADDING,
-  }: { padding?: string | number } = {}): ComponentStyleSpec =>
+  }: { padding?: string | number } = {}): SelectComponentStyleType =>
   ({ state: { isOpen } }) =>
     css({
       display: isOpen ? 'block' : 'none',
@@ -20,6 +20,6 @@ export const InfoBoxStyle =
       right: 0,
     })
 
-export const InfoBox = ({ className, children }: InfoBoxProps) => (
+export const InfoBox: InfoBoxType = ({ className, children }) => (
   <div className={className}>{children}</div>
 )

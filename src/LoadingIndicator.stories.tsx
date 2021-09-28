@@ -2,7 +2,7 @@ import React from 'react'
 import { LoadingIndicator } from './LoadingIndicator'
 
 export default {
-  title: 'Loading Indicator',
+  title: 'Components / Loading Indicator',
   component: LoadingIndicator,
 }
 

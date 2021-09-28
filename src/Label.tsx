@@ -1,14 +1,14 @@
 import React from 'react'
 
-import { LabelProps, ComponentStyleSpec } from './types'
+import { LabelType, SelectComponentStyleType } from './types'
 
-export const LabelStyle = (): ComponentStyleSpec => null
+export const LabelStyle = (): SelectComponentStyleType => null
 
-export const Label = ({
+export const Label: LabelType = ({
   children,
   labelProps,
   className,
-}: LabelProps): React.ReactElement => (
+}) => (
   <label className={className} {...labelProps}>
     {children}
   </label>

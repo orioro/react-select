@@ -13,10 +13,10 @@ import { InfoBox, InfoBoxStyle } from './InfoBox'
 import { defaultValueToString, applyIfFunction } from './util'
 
 import {
-  SelectProps,
+  SelectType,
   SelectComponents,
-  ComponentStyleSpec,
-  SelectComponentStyleSpecs,
+  SelectComponentStyles,
+  ComponentStyleType,
 } from './types'
 
 type AnyObject = {
@@ -51,9 +51,9 @@ const stateReducer = (
   }
 }
 
-export const ContainerStyle = (): ComponentStyleSpec =>
+export const SelectStyle = (): ComponentStyleType =>
   css(`
-    display: inline-flex;
+    display: flex;
     flex-direction: column;
     position: relative;
   `)
@@ -69,7 +69,7 @@ const defaultComponents: SelectComponents = {
 }
 
 const defaultClassNames = {
-  Container: ContainerStyle(),
+  Select: SelectStyle(),
   Label: LabelStyle(),
   Combobox: ComboboxStyle(),
   TextInput: TextInputStyle(),
@@ -79,7 +79,7 @@ const defaultClassNames = {
   InfoBox: InfoBoxStyle(),
 }
 
-export const Select = ({
+export const Select: SelectType = ({
   label,
   info,
   options,
@@ -89,25 +89,26 @@ export const Select = ({
   onSetValue,
 
   onSearchTextChange,
+  textInputProps = {},
 
   components = {},
   classNames = {},
-}: SelectProps): React.ReactElement => {
-  const _components: SelectComponents = useMemo(
+}) => {
+  const _components = useMemo(
     () => ({
       ...defaultComponents,
       ...components,
     }),
     [components]
-  )
+  ) as SelectComponents
 
-  const _classNames: SelectComponentStyleSpecs = useMemo(
+  const _classNames = useMemo(
     () => ({
       ...defaultClassNames,
       ...classNames,
     }),
     [classNames]
-  )
+  ) as SelectComponentStyles
 
   const {
     // Prop getters
@@ -132,7 +133,8 @@ export const Select = ({
     itemToString: valueToString,
 
     selectedItem: value,
-    onSelectedItemChange: ({ selectedItem }) => onSetValue(selectedItem),
+    onSelectedItemChange: ({ selectedItem }) =>
+      onSetValue(selectedItem === undefined ? null : selectedItem),
 
     onInputValueChange: ({ inputValue }) =>
       onSearchTextChange(inputValue ? inputValue : ''),
@@ -153,7 +155,7 @@ export const Select = ({
   }
 
   return (
-    <div className={applyIfFunction(_classNames.Container, selectContext)}>
+    <div className={applyIfFunction(_classNames.Select, selectContext)}>
       <_components.Label
         {...selectContext}
         className={applyIfFunction(_classNames.Label, selectContext)}
@@ -170,6 +172,7 @@ export const Select = ({
           {...selectContext}
           className={applyIfFunction(_classNames.TextInput, selectContext)}
           inputProps={getInputProps({
+            ...textInputProps,
             onFocus: () => {
               if (!isOpen) {
                 openMenu()
@@ -192,7 +195,12 @@ export const Select = ({
       <_components.Menu
         className={applyIfFunction(_classNames.Menu, selectContext)}
         menuProps={getMenuProps()}
-        getOptionDomProps={getItemProps}
+        getOptionDomProps={({ option, index }) =>
+          getItemProps({
+            item: option,
+            index,
+          })
+        }
         renderOption={({ option, index }) => {
           const menuOptionContext = {
             ...selectContext,
@@ -215,6 +223,7 @@ export const Select = ({
       />
       {info && (
         <_components.InfoBox
+          {...selectContext}
           className={applyIfFunction(_classNames.InfoBox, selectContext)}
         >
           {info}

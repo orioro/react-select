@@ -15,6 +15,7 @@ const _commonInputStyles = ({ padding }: TextInputStyleProps) =>
   font-family: inherit;
 
   display: flex;
+  flex-grow: 1;
   align-items: center;
   border: 1px solid black;
 `
@@ -25,6 +26,8 @@ export const TextInputStyle =
   }: TextInputStyleProps = {}): ComponentStyleSpec =>
   () =>
     css(`
+    flex-grow: 1;
+    display: flex;
     position: relative;
 
     > input {

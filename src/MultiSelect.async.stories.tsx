@@ -1,18 +1,17 @@
 import React, { useState, useMemo, useEffect } from 'react'
-import { Select } from './Select'
 import {
-  _simulateAsync,
   CIDADES,
+  cidadeToString,
   Debug,
   searchCidades,
-  cidadeToString,
+  _simulateAsync,
 } from '../test/util'
-
+import { MultiSelect } from './MultiSelect'
 import { useAsyncOptions } from './useAsyncOptions'
 
 export default {
-  title: 'Select / Async',
-  component: Select,
+  title: 'MultiSelect / Async',
+  component: MultiSelect,
 }
 
 const MAX_OPTION_LENGTH = 100
@@ -22,14 +21,14 @@ const asyncSearchCidades = _simulateAsync((searchText: string) =>
 )
 
 type AsyncTemplate = {
-  initialValue?: any
+  initialValue?: any[]
   searchOptions: (searchText: string) => Promise<any[]>
   debug?: any
   [key: string]: any
 }
 
 const AsyncTemplate = ({
-  initialValue = null,
+  initialValue = [],
   searchOptions,
   debug = {},
   ...props
@@ -42,8 +41,8 @@ const AsyncTemplate = ({
 
   return (
     <>
-      <Select
-        label='Cidade'
+      <MultiSelect
+        label='Cidades'
         value={value}
         onSetValue={setValue}
         {...props}
@@ -65,45 +64,49 @@ const AsyncTemplate = ({
  * searchOptions must be memoized in order
  * not to cause unecessary re-renders
  */
-const loadTextOptions = (searchText: string) =>
+const searchTextOptions = (searchText: string) =>
   asyncSearchCidades(searchText).then((cidades) => cidades.map(cidadeToString))
 
-export const TextOptions = () => {
-  return <AsyncTemplate searchOptions={loadTextOptions} />
-}
+export const TextOptions = () => (
+  <AsyncTemplate searchOptions={searchTextOptions} />
+)
 
-export const TextOptionsWithInitialValue = () => {
-  return (
-    <AsyncTemplate searchOptions={loadTextOptions} initialValue='São Paulo' />
+export const TextOptionsWithInitialValue = () => (
+  <AsyncTemplate
+    searchOptions={searchTextOptions}
+    initialValue={CIDADES.slice(80, 100).map(cidadeToString)}
+  />
+)
+
+export const ObjectOptions = () => (
+  <AsyncTemplate
+    searchOptions={asyncSearchCidades}
+    valueToString={cidadeToString}
+  />
+)
+
+export const ObjectOptionsWithInitialValue = () => (
+  <AsyncTemplate
+    searchOptions={asyncSearchCidades}
+    initialValue={CIDADES.slice(70, 100)}
+    valueToString={cidadeToString}
+  />
+)
+
+const asyncGetLabels = _simulateAsync((values) => {
+  return CIDADES.filter((cidade) => values.includes(cidade.code)).reduce(
+    (acc, cidade) => ({
+      ...acc,
+      [cidade.code]: cidadeToString(cidade),
+    }),
+    {}
   )
-}
-
-export const ObjectOptions = () => {
-  return (
-    <AsyncTemplate
-      searchOptions={asyncSearchCidades}
-      valueToString={cidadeToString}
-    />
-  )
-}
-
-export const ObjectOptionsWithInitialValue = () => {
-  return (
-    <AsyncTemplate
-      searchOptions={asyncSearchCidades}
-      valueToString={cidadeToString}
-      initialValue={CIDADES[101]}
-    />
-  )
-}
-
-const asyncGetLabel = _simulateAsync((value) => {
-  const cidade = CIDADES.find((cidade) => cidade.code === value)
-
-  return cidade ? cidade.nome : 'Cidade inválida'
 })
 
-const NormalizedOptionsTemplate = (props: Partial<AsyncTemplate> = {}) => {
+const NormalizedOptionsTemplate = ({
+  initialValue = [],
+  ...props
+}: Partial<AsyncTemplate> = {}) => {
   //
   // Scenario: the label must be loaded asynchronously
   //
@@ -128,17 +131,18 @@ const NormalizedOptionsTemplate = (props: Partial<AsyncTemplate> = {}) => {
   )
 
   useEffect(() => {
-    asyncGetLabel(props.initialValue).then((initialValueLabel) =>
+    asyncGetLabels(initialValue).then((initialValueLabels) =>
       setLabels((current) => ({
         ...current,
-        [props.initialValue]: initialValueLabel,
+        ...initialValueLabels,
       }))
     )
-  }, [props.initialValue])
+  }, [initialValue])
 
   return (
     <AsyncTemplate
       {...props}
+      initialValue={initialValue}
       searchOptions={searchOptions}
       valueToString={(value: string | null) =>
         (value && labels[value]) || 'Carregando...'
@@ -152,5 +156,7 @@ const NormalizedOptionsTemplate = (props: Partial<AsyncTemplate> = {}) => {
 
 export const NormalizedOptions = () => <NormalizedOptionsTemplate />
 export const NormalizedOptionsWithInitialValue = () => (
-  <NormalizedOptionsTemplate initialValue={CIDADES[200].code} />
+  <NormalizedOptionsTemplate
+    initialValue={CIDADES.slice(400, 405).map((cidade) => cidade.code)}
+  />
 )
