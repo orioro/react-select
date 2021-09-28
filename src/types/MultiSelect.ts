@@ -1,6 +1,11 @@
 import { SelectProps } from './Select'
 
-import { any, ComponentType, FnValueToString, PlainObject } from './common'
+import {
+  ComponentStyleType,
+  ComponentType,
+  FnValueToString,
+  PlainObject,
+} from './common'
 import { ReactNode } from 'react'
 
 export type MultiSelectState<OptionType = any> = {
@@ -29,6 +34,7 @@ export type SelectedValueListType<OptionType = any> = MultiSelectComponentType<
 export type SelectedValueType<OptionType = any> = MultiSelectComponentType<
   {
     value: any
+    index: number
     onRemove: (item: any) => void
   },
   OptionType
@@ -39,10 +45,24 @@ export type MultiSelectComponents<OptionType = any> = {
   SelectedValue: SelectedValueType<OptionType>
 }
 
+export type MultiSelectComponentStyleType<
+  PropsType = any,
+  OptionType = any
+> = ComponentStyleType<MultiSelectContext<OptionType> & PropsType>
+
+export type SelectedValueStyleType<OptionType = any> =
+  MultiSelectComponentStyleType<
+    {
+      value: any
+      index: number
+    },
+    OptionType
+  >
+
 export type MultiSelectComponentStyles<OptionType = any> = {
-  MultiSelect: any
-  SelectedValueList: any
-  SelectedValue: any
+  MultiSelect: MultiSelectComponentStyleType
+  SelectedValueList: MultiSelectComponentStyleType
+  SelectedValue: SelectedValueStyleType<OptionType>
 }
 
 export type MultiSelectProps<OptionType = any> = Omit<
@@ -51,7 +71,7 @@ export type MultiSelectProps<OptionType = any> = Omit<
 > & {
   value: OptionType[]
   onSetValue: (newValue: OptionType[]) => void
-  
+
   components?: Partial<MultiSelectComponents<OptionType>>
   classNames?: Partial<MultiSelectComponentStyles<OptionType>>
 }

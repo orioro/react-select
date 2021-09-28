@@ -3,6 +3,7 @@ import { Select } from './Select'
 import {
   MultiSelectType,
   MultiSelectComponents,
+  MultiSelectComponentStyleType,
   MultiSelectComponentStyles,
 } from './types'
 import { useMultipleSelection } from 'downshift'
@@ -12,10 +13,10 @@ import { SelectedValueList, SelectedValueListStyle } from './SelectedValueList'
 import { SelectedValue, SelectedValueStyle } from './SelectedValue'
 import { css } from '@emotion/css'
 
-export const MultiSelectStyles = () => css`
-    display: inline-flex;
-    flex-direction: column;
-  `
+export const MultiSelectStyles = (): MultiSelectComponentStyleType => css`
+  display: inline-flex;
+  flex-direction: column;
+`
 
 const defaultComponents = {
   SelectedValueList,

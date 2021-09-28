@@ -3,7 +3,10 @@ import { FnValueToString } from './types'
 export const defaultValueToString: FnValueToString = (item) =>
   item ? item : ''
 
-export const applyIfFunction = <Args extends any[]>(
-  fnOrValue: any,
+type applyIfFunction = <Args extends any[], ReturnType>(
+  fnOrValue: ((...args: Args) => ReturnType) | any,
   ...args: Args
-) => (typeof fnOrValue === 'function' ? fnOrValue(...args) : fnOrValue)
+) => ReturnType
+
+export const applyIfFunction: applyIfFunction = (fnOrValue, ...args) =>
+  typeof fnOrValue === 'function' ? fnOrValue(...args) : fnOrValue

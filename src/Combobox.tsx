@@ -3,10 +3,8 @@ import { css } from '@emotion/css'
 
 import { ComboboxType, SelectComponentStyleType } from './types'
 
-export const ComboboxStyle =
-  (): SelectComponentStyleType =>
-  (_context) =>
-    css({ display: 'flex' })
+export const ComboboxStyle = (): SelectComponentStyleType => () =>
+  css({ display: 'flex' })
 
 export const Combobox: ComboboxType = ({
   children,

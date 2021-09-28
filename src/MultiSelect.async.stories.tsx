@@ -20,7 +20,7 @@ const asyncSearchCidades = _simulateAsync((searchText: string) =>
   searchCidades(searchText).slice(0, MAX_OPTION_LENGTH)
 )
 
-type AsyncTemplate = {
+type AsyncTemplateProps = {
   initialValue?: any[]
   searchOptions: (searchText: string) => Promise<any[]>
   debug?: any
@@ -32,7 +32,7 @@ const AsyncTemplate = ({
   searchOptions,
   debug = {},
   ...props
-}: AsyncTemplate) => {
+}: AsyncTemplateProps) => {
   const [asyncOptionProps, { isLoading }] = useAsyncOptions({
     searchOptions,
   })
@@ -106,7 +106,7 @@ const asyncGetLabels = _simulateAsync((values) => {
 const NormalizedOptionsTemplate = ({
   initialValue = [],
   ...props
-}: Partial<AsyncTemplate> = {}) => {
+}: Partial<AsyncTemplateProps> = {}) => {
   //
   // Scenario: the label must be loaded asynchronously
   //

@@ -2,13 +2,13 @@ import React from 'react'
 import { css } from '@emotion/css'
 import { DEFAULT_PADDING } from './constants'
 
-import { SelectedValueType } from './types'
+import { SelectedValueType, SelectedValueStyleType } from './types'
 
 export const SelectedValueStyle = ({
   padding = DEFAULT_PADDING,
 }: {
   padding?: string
-} = {}) => css`
+} = {}): SelectedValueStyleType => css`
   display: flex;
   justify-content: space-between;
   padding: ${padding};
@@ -31,9 +31,7 @@ export const SelectedValue: SelectedValueType = ({
   onRemove,
 }) => (
   <div className={className}>
-    <div>
-      {valueToString(value)}
-    </div>
+    <div>{valueToString(value)}</div>
     <button
       onClick={(e) => {
         e.stopPropagation()

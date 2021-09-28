@@ -25,12 +25,12 @@ const SyncTemplate = ({
         label='Estados'
         value={value}
         onSetValue={setValue}
-        {...useAutoSearch(
+        {...useAutoSearch({
           options,
-          optionsSearcher({
+          search: optionsSearcher({
             valueToString: props.valueToString,
-          })
-        )}
+          }),
+        })}
         {...props}
       />
       <Debug

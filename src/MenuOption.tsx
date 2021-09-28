@@ -2,14 +2,10 @@ import React from 'react'
 import { css } from '@emotion/css'
 import { DEFAULT_PADDING } from './constants'
 
-import {
-  MenuOptionType,
-  MenuOptionStyleType,
-  PlainObject,
-} from './types'
+import { MenuOptionType, MenuOptionStyleType, PlainObject } from './types'
 
 const DEFAULT_HIGHLIGHT_STYLE = {
-  backgroundColor: '#bde4ff'
+  backgroundColor: '#bde4ff',
 }
 
 export type MenuOptionStyleProps = {
@@ -35,6 +31,4 @@ export const MenuOption: MenuOptionType = ({
   option,
   valueToString,
   className,
-}) => (
-  <div className={className}>{valueToString(option)}</div>
-)
+}) => <div className={className}>{valueToString(option)}</div>

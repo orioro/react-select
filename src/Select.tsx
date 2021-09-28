@@ -34,10 +34,10 @@ const stateReducer = (
     case useCombobox.stateChangeTypes.ItemClick:
 
     // Prevent searchText/inputValue from initializing with the full value
-    case useCombobox.stateChangeTypes.ControlledPropUpdatedSelectedItem:
+    case useCombobox.stateChangeTypes.ControlledPropUpdatedSelectedItem: // eslint-disable-line no-fallthrough
 
     // Prevent searchText/inputValue from having an incomplete value (set it to '' on blur)
-    case useCombobox.stateChangeTypes.InputBlur:
+    case useCombobox.stateChangeTypes.InputBlur: // eslint-disable-line no-fallthrough
     case useCombobox.stateChangeTypes.InputKeyDownEscape:
     case useCombobox.stateChangeTypes.ToggleButtonClick:
       // case useCombobox.stateChangeTypes.FunctionCloseMenu:

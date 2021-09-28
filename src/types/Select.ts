@@ -19,10 +19,7 @@ export type SelectContext<OptionType = any> = {
   valueToString: FnValueToString<OptionType>
 }
 
-export type SelectComponentType<
-  PropsType,
-  OptionType = any
-> = ComponentType<
+export type SelectComponentType<PropsType, OptionType = any> = ComponentType<
   SelectContext<OptionType> & {
     className: string
   } & PropsType
@@ -51,19 +48,18 @@ export type TextInputType<OptionType = any> = SelectComponentType<
   OptionType
 >
 
-export type ToggleMenuButtonType<OptionType = any> =
-  SelectComponentType<
-    {
-      buttonProps: PlainObject
-      children: ReactNode
-    },
-    OptionType
-  >
+export type ToggleMenuButtonType<OptionType = any> = SelectComponentType<
+  {
+    buttonProps: PlainObject
+    children: ReactNode
+  },
+  OptionType
+>
 
 export type MenuType<OptionType = any> = SelectComponentType<
   {
     menuProps: PlainObject
-    getOptionDomProps: (opts: { option: any, index: number }) => PlainObject
+    getOptionDomProps: (opts: { option: any; index: number }) => PlainObject
     renderOption: (props: { option: any; index: number }) => ReactElement
   },
   OptionType
@@ -98,7 +94,7 @@ export type SelectComponents<OptionType = any> = {
 }
 
 export type SelectComponentStyleType<
-  PropsType = {},
+  PropsType = any,
   OptionType = any
 > = ComponentStyleType<SelectContext<OptionType> & PropsType>
 
@@ -107,14 +103,14 @@ export type Component<PropsType> = (props: PropsType) => ReactElement
 export type MenuOptionStyleType = SelectComponentStyleType<MenuOptionContext>
 
 export type SelectComponentStyles<OptionType = any> = {
-  Select: SelectComponentStyleType<{}, OptionType>
-  Label: SelectComponentStyleType<{}, OptionType>
-  Combobox: SelectComponentStyleType<{}, OptionType>
-  TextInput: SelectComponentStyleType<{}, OptionType>
-  ToggleMenuButton: SelectComponentStyleType<{}, OptionType>
-  Menu: SelectComponentStyleType<{}, OptionType>
+  Select: SelectComponentStyleType<any, OptionType>
+  Label: SelectComponentStyleType<any, OptionType>
+  Combobox: SelectComponentStyleType<any, OptionType>
+  TextInput: SelectComponentStyleType<any, OptionType>
+  ToggleMenuButton: SelectComponentStyleType<any, OptionType>
+  Menu: SelectComponentStyleType<any, OptionType>
   MenuOption: MenuOptionStyleType
-  InfoBox: SelectComponentStyleType<{}, OptionType>
+  InfoBox: SelectComponentStyleType<any, OptionType>
 }
 
 export type FnOnSearchTextChange = (newSearchText: string) => void

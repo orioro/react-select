@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { css, keyframes } from '@emotion/css'
 
 const dotsAnimation = keyframes`
@@ -23,6 +23,8 @@ const styles = css(`
   }
 `)
 
-export const LoadingIndicator = ({ message = '' }: { message?: string }) => (
-  <div className={styles}>{message}</div>
-)
+export const LoadingIndicator = ({
+  message = '',
+}: {
+  message?: string
+}): ReactElement => <div className={styles}>{message}</div>

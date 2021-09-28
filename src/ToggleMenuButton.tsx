@@ -1,14 +1,14 @@
 import React from 'react'
 
-import { ToggleMenuButtonProps, ComponentStyleSpec } from './types'
+import { ToggleMenuButtonType, SelectComponentStyleType } from './types'
 
-export const ToggleMenuButtonStyle = (): ComponentStyleSpec => null
+export const ToggleMenuButtonStyle = (): SelectComponentStyleType => null
 
-export const ToggleMenuButton = ({
+export const ToggleMenuButton: ToggleMenuButtonType = ({
   className,
   buttonProps,
   children,
-}: ToggleMenuButtonProps): React.ReactElement => (
+}): React.ReactElement => (
   <button
     className={className}
     type='button'

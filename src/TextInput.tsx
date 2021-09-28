@@ -2,7 +2,7 @@ import React from 'react'
 import { css } from '@emotion/css'
 import { DEFAULT_PADDING } from './constants'
 
-import { TextInputProps, ComponentStyleSpec } from './types'
+import { TextInputType, SelectComponentStyleType } from './types'
 
 export type TextInputStyleProps = {
   padding?: string | number
@@ -23,7 +23,7 @@ const _commonInputStyles = ({ padding }: TextInputStyleProps) =>
 export const TextInputStyle =
   ({
     padding = DEFAULT_PADDING,
-  }: TextInputStyleProps = {}): ComponentStyleSpec =>
+  }: TextInputStyleProps = {}): SelectComponentStyleType =>
   () =>
     css(`
     flex-grow: 1;
@@ -47,12 +47,12 @@ export const TextInputStyle =
     }
   `)
 
-export const TextInput = ({
+export const TextInput: TextInputType = ({
   className,
   inputProps,
   state,
   valueToString,
-}: TextInputProps): React.ReactElement => (
+}) => (
   <div className={className}>
     <input {...inputProps} />
 

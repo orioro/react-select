@@ -28,12 +28,12 @@ const SyncTemplate = ({
 
   const props_: SelectProps = {
     ...props,
-    ...useAutoSearch(
+    ...useAutoSearch({
       options,
-      optionsSearcher({
+      search: optionsSearcher({
         valueToString: props.valueToString,
-      })
-    ),
+      }),
+    }),
     value,
     onSetValue: setValue,
   } as SelectProps

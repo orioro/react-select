@@ -2,7 +2,7 @@ import { ReactNode, useMemo } from 'react'
 import { useLatest } from 'react-use'
 import React, { useState, useEffect } from 'react'
 import { useDebounce } from 'react-use'
-import { any, FnOnSearchTextChange } from './types'
+import { FnOnSearchTextChange } from './types'
 import { LoadingIndicator } from './LoadingIndicator'
 
 import { DEFAULT_NO_OPTIONS_MESSAGE } from './constants'
@@ -25,9 +25,7 @@ class LoadOptionsError extends Error {
 
 const _wrapLoadOptions =
   (searchOptions: FnAsyncSearchOptions) =>
-  (
-    searchText: string
-  ): Promise<{ sourceSearchText: string; options: any[] }> =>
+  (searchText: string): Promise<{ sourceSearchText: string; options: any[] }> =>
     searchOptions(searchText).then(
       (options) => ({
         sourceSearchText: searchText,
