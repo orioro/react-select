@@ -18,6 +18,7 @@ const _commonInputStyles = ({ padding }: TextInputStyleProps) =>
   flex-grow: 1;
   align-items: center;
   border: none;
+  background-color: transparent;
 `
 
 export const TextInputStyle =

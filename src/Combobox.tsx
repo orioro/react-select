@@ -8,6 +8,7 @@ export const ComboboxStyle = (): SelectComponentStyleType => () =>
     display: 'flex',
     alignItems: 'center',
     border: '1px solid currentColor',
+    backgroundColor: 'white',
   })
 
 export const Combobox: ComboboxType = ({
