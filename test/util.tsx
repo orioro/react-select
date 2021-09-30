@@ -67,6 +67,11 @@ export const CIDADES: Cidade[] = BR_ESTADOS_E_CIDADES.estados.reduce(
 export const cidadeToString = (cidade: Cidade | null) =>
   cidade ? `${cidade.nome} - ${cidade.estado}` : ''
 
-export const searchCidades = optionsSearcher({
-  valueToString: cidadeToString,
-}).bind(null, CIDADES)
+export const searchCidades = (searchText: string) =>
+  optionsSearcher()(
+    CIDADES.map((cidade) => ({
+      label: cidadeToString(cidade),
+      value: cidade,
+    })),
+    searchText
+  ).map((result) => result.value)

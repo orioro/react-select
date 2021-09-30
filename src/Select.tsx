@@ -11,14 +11,17 @@ import { MenuOption, MenuOptionStyle } from './MenuOption'
 import { InfoBox, InfoBoxStyle } from './InfoBox'
 import { ClearButton, ClearButtonStyle } from './ClearButton'
 
-import { defaultValueToString, applyIfFunction } from './util'
+import { applyIfFunction } from './util'
 
 import {
+  SelectProps,
   SelectType,
   SelectComponents,
   SelectComponentStyles,
   ComponentStyleType,
   SelectContext,
+  Option,
+  NotUndefined,
 } from './types'
 
 type AnyObject = {
@@ -83,12 +86,17 @@ const defaultClassNames = {
   ClearButton: ClearButtonStyle(),
 }
 
-export const Select: SelectType = ({
+function _optionToString<ValueType = NotUndefined>(
+  option: Option<ValueType> | null
+) {
+  return option === null ? '' : option.label
+}
+
+export function Select<ValueType = NotUndefined>({
   label,
   placeholder = '',
   info,
   options,
-  valueToString = defaultValueToString,
 
   value,
   onSetValue,
@@ -98,7 +106,7 @@ export const Select: SelectType = ({
 
   components = {},
   classNames = {},
-}) => {
+}: SelectProps) {
   const _components = useMemo(
     () => ({
       ...defaultComponents,
@@ -126,6 +134,7 @@ export const Select: SelectType = ({
 
     // State
     isOpen,
+    selectedItem: selectedOption,
     highlightedIndex,
     inputValue: searchText,
 
@@ -137,31 +146,39 @@ export const Select: SelectType = ({
     setInputValue,
     toggleMenu,
     reset,
-  } = useCombobox({
+  } = useCombobox<Option<ValueType>>({
     stateReducer,
 
     items: options,
-    itemToString: valueToString,
+    itemToString: _optionToString,
 
-    selectedItem: value,
+    selectedItem: useMemo(
+      () => options.find((option) => option.value === value) || null,
+      [options, value]
+    ),
     onSelectedItemChange: ({ selectedItem }) =>
-      onSetValue(selectedItem === undefined ? null : selectedItem),
+      onSetValue(
+        selectedItem === undefined || selectedItem === null
+          ? null
+          : selectedItem.value
+      ),
 
-    onInputValueChange: ({ inputValue }) =>
-      onSearchTextChange(inputValue ? inputValue : ''),
+    onInputValueChange: ({ inputValue, type }) => {
+      onSearchTextChange(inputValue ? inputValue : '')
+    }
   })
 
   const selectContext: SelectContext = {
-    valueToString,
     state: useMemo(
       () => ({
         isOpen,
         highlightedIndex,
         searchText,
+        selectedOption,
         value,
         options,
       }),
-      [isOpen, highlightedIndex, searchText, value, options]
+      [isOpen, highlightedIndex, searchText, value, options, selectedOption]
     ),
     actions: {
       closeMenu,

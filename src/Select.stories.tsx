@@ -10,7 +10,7 @@ import { composeStyles } from './composeStyles'
 
 import './Select.stories.css'
 
-import { ESTADOS, Debug } from '../test/util'
+import { ESTADOS, Debug, estadoToString } from '../test/util'
 
 export default {
   title: 'Select / Sync',
@@ -30,9 +30,7 @@ const SyncTemplate = ({
     ...props,
     ...useAutoSearch({
       options,
-      search: optionsSearcher({
-        valueToString: props.valueToString,
-      }),
+      search: optionsSearcher(),
     }),
     value,
     onSetValue: setValue,
@@ -46,44 +44,60 @@ const SyncTemplate = ({
   )
 }
 
-export const TextOptions = () => (
-  <SyncTemplate label='Estado' options={ESTADOS.map((e) => e.nome)} />
-)
-export const TextOptionsWithInitialValue = () => (
+export const TextOptionValue = () => (
   <SyncTemplate
     label='Estado'
-    options={ESTADOS.map((e) => e.nome)}
-    initialValue={ESTADOS[8].nome}
+    options={ESTADOS.map((e) => ({
+      label: estadoToString(e),
+      value: e.sigla,
+    }))}
+  />
+)
+export const TextOptionValueWithInitialValue = () => (
+  <SyncTemplate
+    label='Estado'
+    options={ESTADOS.map((e) => ({
+      label: estadoToString(e),
+      value: e.sigla,
+    }))}
+    initialValue={ESTADOS[8].sigla}
   />
 )
 
-const ObjectOptionsTemplate: Story = (props) => {
+const ObjectOptionValueTemplate: Story = (props) => {
   return (
     <SyncTemplate
       {...props}
       label='Estado'
-      options={ESTADOS}
-      valueToString={(value: any) => (value ? value.nome : '')}
+      options={ESTADOS.map((estado) => ({
+        label: estadoToString(estado),
+        value: estado,
+      }))}
     />
   )
 }
 
-export const ObjectOptions = () => <ObjectOptionsTemplate />
-export const ObjectOptionsWithInitialValue = () => (
-  <ObjectOptionsTemplate initialValue={ESTADOS[4]} />
+export const ObjectOptionValue = () => <ObjectOptionValueTemplate />
+export const ObjectOptionValueWithInitialValue = () => (
+  <ObjectOptionValueTemplate initialValue={ESTADOS[4]} />
 )
 
 const NormalizedOptionsTemplate: Story = (props) => {
+  const siglas = ESTADOS.map((option) => option.sigla)
+
   return (
     <SyncTemplate
       {...props}
       label='Estado'
-      options={ESTADOS.map((option) => option.sigla)}
-      valueToString={(value: any) => {
-        return value
-          ? ESTADOS.find((option) => option.sigla === value)?.nome
-          : ''
-      }}
+      options={ESTADOS.map((estado) => ({
+        label: estadoToString(estado),
+        value: estado.sigla,
+      }))}
+      // valueToString={(value: any) => {
+      //   return value
+      //     ? ESTADOS.find((option) => option.sigla === value)?.nome
+      //     : ''
+      // }}
     />
   )
 }
@@ -96,7 +110,10 @@ export const NormalizedOptionsWithInitialValue = () => (
 export const StyleComposition = () => (
   <SyncTemplate
     label='Estado'
-    options={ESTADOS.map((e) => e.nome)}
+    options={ESTADOS.map((e) => ({
+      label: estadoToString(e),
+      value: e.nome,
+    }))}
     classNames={{
       Container: composeStyles<SelectContext>(
         SelectStyle(),
@@ -128,7 +145,10 @@ export const StyleComposition = () => (
 export const StyleStaticClassNameOverride = () => (
   <SyncTemplate
     label='Estado'
-    options={ESTADOS.map((e) => e.nome)}
+    options={ESTADOS.map((e) => ({
+      label: estadoToString(e),
+      value: e.sigla,
+    }))}
     classNames={{
       Select: 'SomeGlobalSelector',
     }}

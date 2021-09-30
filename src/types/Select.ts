@@ -1,146 +1,154 @@
 import type { ReactElement, ReactNode } from 'react'
 import type {
   PlainObject,
-  FnValueToString,
+  // FnValueToString,
   ComponentType,
   ComponentStyleType,
+  Option,
 } from './common'
 
-export type SelectState<OptionType = any> = {
+export type SelectState<ValueType = any> = {
   isOpen: boolean
   highlightedIndex: number
   searchText: string
-  value: OptionType
-  options: OptionType[]
+  value: ValueType
+  selectedOption: Option<ValueType> | null
+  options: Option<ValueType>[]
 }
 
-export type SelectActions<OptionType = any> = {
+export type SelectActions<ValueType = any> = {
   closeMenu: () => void
   openMenu: () => void
-  selectOption: (option: OptionType) => void
+  selectOption: (option: Option<ValueType>) => void
   setHighlightedIndex: (index: number) => void
   setInputValue: (value: string) => void
   toggleMenu: () => void
   reset: () => void
 }
 
-export type SelectContext<OptionType = any> = {
-  state: SelectState<OptionType>
-  valueToString: FnValueToString<OptionType>
-  actions: SelectActions<OptionType>
+export type SelectContext<ValueType = any> = {
+  state: SelectState<ValueType>
+  // valueToString: FnValueToString<ValueType>
+  actions: SelectActions<ValueType>
 }
 
-export type SelectComponentType<PropsType, OptionType = any> = ComponentType<
-  SelectContext<OptionType> & {
+export type SelectComponentType<PropsType, ValueType = any> = ComponentType<
+  SelectContext<ValueType> & {
     className: string
   } & PropsType
 >
 
-export type LabelType<OptionType = any> = SelectComponentType<
+export type LabelType<ValueType = any> = SelectComponentType<
   {
     children: ReactNode
     labelProps: PlainObject
   },
-  OptionType
+  ValueType
 >
 
-export type ComboboxType<OptionType = any> = SelectComponentType<
+export type ComboboxType<ValueType = any> = SelectComponentType<
   {
     children: ReactNode
     comboboxProps: PlainObject
   },
-  OptionType
+  ValueType
 >
 
-export type TextInputType<OptionType = any> = SelectComponentType<
+export type TextInputType<ValueType = any> = SelectComponentType<
   {
     inputProps: PlainObject
   },
-  OptionType
+  ValueType
 >
 
-export type ToggleMenuButtonType<OptionType = any> = SelectComponentType<
+export type ToggleMenuButtonType<ValueType = any> = SelectComponentType<
   {
     buttonProps: PlainObject
     children: ReactNode
   },
-  OptionType
+  ValueType
 >
 
-export type MenuType<OptionType = any> = SelectComponentType<
+export type MenuType<ValueType = any> = SelectComponentType<
   {
     menuProps: PlainObject
-    getOptionDomProps: (opts: { option: any; index: number }) => PlainObject
-    renderOption: (props: { option: any; index: number }) => ReactElement
+    getOptionDomProps: (opts: {
+      option: Option<ValueType>
+      index: number
+    }) => PlainObject
+    renderOption: (props: {
+      option: Option<ValueType>
+      index: number
+    }) => ReactElement
   },
-  OptionType
+  ValueType
 >
 
-type MenuOptionContext = {
+type MenuOptionContext<ValueType = any> = {
   isHighlighted: boolean
-  option: any
+  option: Option<ValueType>
   index: number
 }
 
-export type MenuOptionType<OptionType = any> = SelectComponentType<
-  MenuOptionContext,
-  OptionType
+export type MenuOptionType<ValueType = any> = SelectComponentType<
+  MenuOptionContext<ValueType>,
+  ValueType
 >
 
-export type InfoBoxType<OptionType = any> = SelectComponentType<
+export type InfoBoxType<ValueType = any> = SelectComponentType<
   {
     children: ReactNode
   },
-  OptionType
+  ValueType
 >
 
-export type ClearButtonType<OptionType = any> = SelectComponentType<
+export type ClearButtonType<ValueType = any> = SelectComponentType<
   any,
-  OptionType
+  ValueType
 >
 
-export type SelectComponents<OptionType = any> = {
-  Label: LabelType<OptionType>
-  Combobox: ComboboxType<OptionType>
-  TextInput: TextInputType<OptionType>
-  ToggleMenuButton: ToggleMenuButtonType<OptionType>
-  Menu: MenuType<OptionType>
-  MenuOption: MenuOptionType<OptionType>
-  InfoBox: InfoBoxType<OptionType>
-  ClearButton: ClearButtonType<OptionType>
+export type SelectComponents<ValueType = any> = {
+  Label: LabelType<ValueType>
+  Combobox: ComboboxType<ValueType>
+  TextInput: TextInputType<ValueType>
+  ToggleMenuButton: ToggleMenuButtonType<ValueType>
+  Menu: MenuType<ValueType>
+  MenuOption: MenuOptionType<ValueType>
+  InfoBox: InfoBoxType<ValueType>
+  ClearButton: ClearButtonType<ValueType>
 }
 
 export type SelectComponentStyleType<
   PropsType = any,
-  OptionType = any
-> = ComponentStyleType<SelectContext<OptionType> & PropsType>
+  ValueType = any
+> = ComponentStyleType<SelectContext<ValueType> & PropsType>
 
 export type Component<PropsType> = (props: PropsType) => ReactElement
 
 export type MenuOptionStyleType = SelectComponentStyleType<MenuOptionContext>
 
-export type SelectComponentStyles<OptionType = any> = {
-  Select: SelectComponentStyleType<any, OptionType>
-  Label: SelectComponentStyleType<any, OptionType>
-  Combobox: SelectComponentStyleType<any, OptionType>
-  TextInput: SelectComponentStyleType<any, OptionType>
-  ToggleMenuButton: SelectComponentStyleType<any, OptionType>
-  Menu: SelectComponentStyleType<any, OptionType>
+export type SelectComponentStyles<ValueType = any> = {
+  Select: SelectComponentStyleType<any, ValueType>
+  Label: SelectComponentStyleType<any, ValueType>
+  Combobox: SelectComponentStyleType<any, ValueType>
+  TextInput: SelectComponentStyleType<any, ValueType>
+  ToggleMenuButton: SelectComponentStyleType<any, ValueType>
+  Menu: SelectComponentStyleType<any, ValueType>
   MenuOption: MenuOptionStyleType
-  InfoBox: SelectComponentStyleType<any, OptionType>
+  InfoBox: SelectComponentStyleType<any, ValueType>
 }
 
 export type FnOnSearchTextChange = (newSearchText: string) => void
 
-export type SelectProps<OptionType = any> = {
-  valueToString?: FnValueToString<OptionType>
-  options: OptionType[]
+export type SelectProps<ValueType = any> = {
+  // valueToString?: FnValueToString<ValueType>
+  options: Option<ValueType>[]
   label: ReactNode
   placeholder?: string
   info: ReactNode
 
-  value: OptionType | null
-  onSetValue: (newValue: OptionType | null) => void
+  value: ValueType | null
+  onSetValue: (newValue: ValueType | null) => void
 
   onSearchTextChange: FnOnSearchTextChange
   textInputProps?: PlainObject
@@ -149,10 +157,10 @@ export type SelectProps<OptionType = any> = {
   // About Partial<T>
   // https://www.typescriptlang.org/docs/handbook/utility-types.html#partialtype
   //
-  components?: Partial<SelectComponents<OptionType>>
-  classNames?: Partial<SelectComponentStyles<OptionType>>
+  components?: Partial<SelectComponents<ValueType>>
+  classNames?: Partial<SelectComponentStyles<ValueType>>
 }
 
-export type SelectType = <OptionType = any>(
-  props: SelectProps<OptionType>
+export type SelectType = <ValueType = any>(
+  props: SelectProps<ValueType>
 ) => React.ReactElement

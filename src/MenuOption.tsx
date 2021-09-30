@@ -29,6 +29,5 @@ export const MenuOptionStyle =
 
 export const MenuOption: MenuOptionType = ({
   option,
-  valueToString,
   className,
-}) => <div className={className}>{valueToString(option)}</div>
+}) => <div className={className}>{option.label}</div>
