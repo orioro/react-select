@@ -2,14 +2,16 @@ import { ReactNode, useMemo } from 'react'
 import { useLatest } from 'react-use'
 import React, { useState, useEffect } from 'react'
 import { useDebounce } from 'react-use'
-import { FnOnSearchTextChange } from './types'
+import { FnOnSearchTextChange, Option } from './types'
 import { LoadingIndicator } from './LoadingIndicator'
 
 import { DEFAULT_NO_OPTIONS_MESSAGE } from './constants'
 
 const DEFAULT_LOADING_MESSAGE = <LoadingIndicator message='Loading options' />
 
-export type FnAsyncSearchOptions = (searchText: string) => Promise<any[]>
+export type FnAsyncSearchOptions<ValueType = any> = (
+  searchText: string
+) => Promise<Option<ValueType>[]>
 
 class LoadOptionsError extends Error {
   constructor(sourceSearchText: string, sourceError: Error) {
@@ -23,9 +25,12 @@ class LoadOptionsError extends Error {
   sourceError: Error
 }
 
-const _wrapLoadOptions =
-  (searchOptions: FnAsyncSearchOptions) =>
-  (searchText: string): Promise<{ sourceSearchText: string; options: any[] }> =>
+function _wrapLoadOptions<ValueType>(
+  searchOptions: FnAsyncSearchOptions<ValueType>
+) {
+  return (
+    searchText: string
+  ): Promise<{ sourceSearchText: string; options: any[] }> =>
     searchOptions(searchText).then(
       (options) => ({
         sourceSearchText: searchText,
@@ -35,22 +40,21 @@ const _wrapLoadOptions =
         throw new LoadOptionsError(searchText, err)
       }
     )
-
-type useDebouncedLoadOptions<OptionType = any> = (props: {
-  searchText: string
-  searchOptions: FnAsyncSearchOptions
-  delay?: number
-}) => {
-  error: Error | null
-  isLoading: boolean
-  options: OptionType[]
 }
 
-const useDebouncedLoadOptions: useDebouncedLoadOptions = ({
+function useDebouncedSearchOptions<ValueType = any>({
   searchText,
   searchOptions,
   delay = 500,
-}) => {
+}: {
+  searchText: string
+  searchOptions: FnAsyncSearchOptions<ValueType>
+  delay?: number
+}): {
+  error: Error | null
+  isLoading: boolean
+  options: Option<ValueType>[]
+} {
   const [error, setError] = useState<null | Error>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [options, setOptions] = useState([] as any[])
@@ -77,6 +81,10 @@ const useDebouncedLoadOptions: useDebouncedLoadOptions = ({
     () => _wrapLoadOptions(searchOptions),
     [searchOptions]
   )
+
+  // console.log({
+  //   searchText,
+  // })
 
   useDebounce(
     () => {
@@ -109,14 +117,19 @@ const useDebouncedLoadOptions: useDebouncedLoadOptions = ({
   }
 }
 
-type useAsyncOptions<OptionType = any> = (props: {
-  searchOptions: FnAsyncSearchOptions
+export function useAsyncOptions<ValueType = any>({
+  searchOptions,
+  delay,
+  noOptionsMessage = DEFAULT_NO_OPTIONS_MESSAGE,
+  loadingMessage = DEFAULT_LOADING_MESSAGE,
+}: {
+  searchOptions: FnAsyncSearchOptions<ValueType>
   delay?: number
   noOptionsMessage?: ReactNode
   loadingMessage?: ReactNode
-}) => [
+}): [
   {
-    options: OptionType[]
+    options: Option<ValueType>[]
     onSearchTextChange: FnOnSearchTextChange
     info: React.ReactNode
   },
@@ -124,17 +137,9 @@ type useAsyncOptions<OptionType = any> = (props: {
     isLoading: boolean
     error: Error | null
   }
-]
-
-export const useAsyncOptions: useAsyncOptions = ({
-  searchOptions,
-  delay,
-  noOptionsMessage = DEFAULT_NO_OPTIONS_MESSAGE,
-  loadingMessage = DEFAULT_LOADING_MESSAGE,
-}) => {
+] {
   const [searchText, setSearchText] = useState<string>('')
-
-  const { error, isLoading, options } = useDebouncedLoadOptions({
+  const { error, isLoading, options } = useDebouncedSearchOptions({
     searchText,
     delay,
     searchOptions,

@@ -1,47 +1,46 @@
 import type { ReactNode } from 'react'
 import { useMemo, useState } from 'react'
-import { FnOnSearchTextChange, FnValueToString } from './types'
-import { defaultValueToString } from './util'
+import { FnOnSearchTextChange, Option } from './types'
 import { DEFAULT_NO_OPTIONS_MESSAGE } from './constants'
 
 type FnPrepareString = (str: string) => string
+type FnSearchOptions<ValueType = any> = (
+  options: Option<ValueType>[],
+  searchText: string
+) => Option<ValueType>[]
 
 const defaultPrepareString: FnPrepareString = (str) => str.toLowerCase()
 
-type optionsSearcher = <OptionType = any>(conf: {
-  valueToString?: FnValueToString<OptionType>
+export function optionsSearcher<ValueType = any>({
+  prepareString = defaultPrepareString,
+}: {
   prepareString?: FnPrepareString
-}) => (options: OptionType[], searchText: string) => OptionType[]
-
-export const optionsSearcher: optionsSearcher =
-  ({
-    valueToString = defaultValueToString,
-    prepareString = defaultPrepareString,
-  } = {}) =>
-  (options, searchText) =>
-    searchText
+} = {}): FnSearchOptions<ValueType> {
+  return function (
+    options: Option<ValueType>[],
+    searchText: string
+  ): Option<ValueType>[] {
+    return searchText
       ? options.filter((option) =>
-          prepareString(valueToString(option)).includes(
-            prepareString(searchText)
-          )
+          prepareString(option.label).includes(prepareString(searchText))
         )
       : options
-
-type useAutoSearch = <OptionType>(props: {
-  options: OptionType[]
-  search: (options: OptionType[], searchText: string) => OptionType[]
-  noOptionsMessage?: ReactNode
-}) => {
-  options: OptionType[]
-  info: ReactNode | null
-  onSearchTextChange: FnOnSearchTextChange
+  }
 }
 
-export const useAutoSearch: useAutoSearch = ({
+export function useAutoSearch<ValueType = any>({
   options,
   search,
   noOptionsMessage = DEFAULT_NO_OPTIONS_MESSAGE,
-}) => {
+}: {
+  options: Option<ValueType>[]
+  search: FnSearchOptions<ValueType>
+  noOptionsMessage?: ReactNode
+}): {
+  options: Option<ValueType>[]
+  info: ReactNode | null
+  onSearchTextChange: FnOnSearchTextChange
+} {
   const [searchText, setSearchText] = useState('')
   const options_ = useMemo(
     () => search(options, searchText),

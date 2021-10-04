@@ -11,14 +11,15 @@ import { MenuOption, MenuOptionStyle } from './MenuOption'
 import { InfoBox, InfoBoxStyle } from './InfoBox'
 import { ClearButton, ClearButtonStyle } from './ClearButton'
 
-import { defaultValueToString, applyIfFunction } from './util'
+import { applyIfFunction } from './util'
 
 import {
-  SelectType,
+  SelectProps,
   SelectComponents,
   SelectComponentStyles,
   ComponentStyleType,
   SelectContext,
+  Option,
 } from './types'
 
 type AnyObject = {
@@ -26,17 +27,21 @@ type AnyObject = {
 }
 
 const stateReducer = (
-  _state: AnyObject,
+  state: AnyObject,
   { changes, type }: { changes: AnyObject; type: string }
 ) => {
   switch (type) {
+    // Prevent searchText/inputValue from changing whenever selected item changes
+    case useCombobox.stateChangeTypes.ControlledPropUpdatedSelectedItem: // eslint-disable-line no-fallthrough
+      return {
+        ...changes,
+        inputValue: state.inputValue,
+      }
+
     // Reset inputValue whenever user selects item
     // either through enter keydown or mouse click
     case useCombobox.stateChangeTypes.InputKeyDownEnter:
     case useCombobox.stateChangeTypes.ItemClick:
-
-    // Prevent searchText/inputValue from initializing with the full value
-    case useCombobox.stateChangeTypes.ControlledPropUpdatedSelectedItem: // eslint-disable-line no-fallthrough
 
     // Prevent searchText/inputValue from having an incomplete value (set it to '' on blur)
     case useCombobox.stateChangeTypes.InputBlur: // eslint-disable-line no-fallthrough
@@ -83,22 +88,25 @@ const defaultClassNames = {
   ClearButton: ClearButtonStyle(),
 }
 
-export const Select: SelectType = ({
+function _optionToString<ValueType = any>(option: Option<ValueType> | null) {
+  return option === null ? '' : option.label
+}
+
+export function Select<ValueType = any>({
   label,
   placeholder = '',
   info,
   options,
-  valueToString = defaultValueToString,
 
-  value,
-  onSetValue,
+  selectedOption,
+  onSelectOption,
 
   onSearchTextChange,
   textInputProps = {},
 
   components = {},
   classNames = {},
-}) => {
+}: SelectProps): React.ReactElement {
   const _components = useMemo(
     () => ({
       ...defaultComponents,
@@ -137,31 +145,41 @@ export const Select: SelectType = ({
     setInputValue,
     toggleMenu,
     reset,
-  } = useCombobox({
+  } = useCombobox<Option<ValueType>>({
     stateReducer,
 
     items: options,
-    itemToString: valueToString,
+    itemToString: _optionToString,
 
-    selectedItem: value,
+    selectedItem: useMemo(() => {
+      return selectedOption === null
+        ? null
+        : options.find((option) => option.value === selectedOption.value) ||
+            selectedOption
+    }, [selectedOption, options]),
     onSelectedItemChange: ({ selectedItem }) =>
-      onSetValue(selectedItem === undefined ? null : selectedItem),
+      onSelectOption(
+        selectedItem === undefined || selectedItem === null
+          ? null
+          : selectedItem
+      ),
 
-    onInputValueChange: ({ inputValue }) =>
-      onSearchTextChange(inputValue ? inputValue : ''),
+    initialInputValue: '',
+    onInputValueChange: ({ inputValue }) => {
+      onSearchTextChange(inputValue ? inputValue : '')
+    },
   })
 
   const selectContext: SelectContext = {
-    valueToString,
     state: useMemo(
       () => ({
         isOpen,
         highlightedIndex,
         searchText,
-        value,
+        selectedOption,
         options,
       }),
-      [isOpen, highlightedIndex, searchText, value, options]
+      [isOpen, highlightedIndex, searchText, options, selectedOption]
     ),
     actions: {
       closeMenu,
@@ -193,7 +211,7 @@ export const Select: SelectType = ({
           className={applyIfFunction(_classNames.TextInput, selectContext)}
           inputProps={getInputProps({
             ...textInputProps,
-            placeholder: value ? '' : placeholder,
+            placeholder: selectedOption ? '' : placeholder,
             onFocus: () => {
               if (!isOpen) {
                 openMenu()
@@ -202,7 +220,7 @@ export const Select: SelectType = ({
           })}
         />
 
-        {(value !== null || searchText !== '') && !isOpen ? (
+        {(selectedOption !== null || searchText !== '') && !isOpen ? (
           <_components.ClearButton {...selectContext} />
         ) : null}
 

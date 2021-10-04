@@ -13,3 +13,9 @@ export type ComponentStyleType<ContextType = any> =
   | string
   | PlainObject
   | ((context: ContextType) => string | null)
+
+export type Option<ValueType = any> = {
+  value: ValueType
+  label: string
+  disabled?: boolean
+}

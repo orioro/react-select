@@ -26,7 +26,6 @@ export const Menu: MenuType = ({
   className,
   state: { isOpen, options },
   menuProps,
-  valueToString,
   getOptionDomProps,
   renderOption,
 }) => {
@@ -34,10 +33,7 @@ export const Menu: MenuType = ({
     <ul className={className} {...menuProps}>
       {isOpen &&
         options.map((option, index) => (
-          <li
-            key={`${valueToString(option)}${index}`}
-            {...getOptionDomProps({ option, index })}
-          >
+          <li key={option.label} {...getOptionDomProps({ option, index })}>
             {renderOption({
               option,
               index,
