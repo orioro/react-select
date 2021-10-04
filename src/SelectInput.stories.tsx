@@ -17,6 +17,7 @@ export const Basic = () => {
         options={ESTADOS.map((estado) => ({
           label: estadoToString(estado),
           value: estado.sigla,
+          disabled: estado.sigla.startsWith('S'),
         }))}
         value={value}
         onSetValue={setValue}

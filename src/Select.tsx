@@ -242,6 +242,7 @@ export function Select<ValueType = any>({
           getItemProps({
             item: option,
             index,
+            disabled: option.disabled,
           })
         }
         renderOption={({ option, index }) => {
