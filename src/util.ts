@@ -1,5 +1,3 @@
-import { FnValueToString } from './types'
-
 type applyIfFunction = <Args extends any[], ReturnType>(
   fnOrValue: ((...args: Args) => ReturnType) | any,
   ...args: Args

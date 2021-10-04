@@ -1,17 +1,5 @@
 import { ReactElement } from 'react'
 
-// 
-// https://github.com/microsoft/TypeScript/issues/7648#issuecomment-541625573
-// 
-export type NotUndefined =
-  | string
-  | number
-  | boolean
-  | symbol
-  | bigint
-  | object
-  | null
-
 export type PlainObject = {
   [key: string]: any
 }
@@ -26,8 +14,8 @@ export type ComponentStyleType<ContextType = any> =
   | PlainObject
   | ((context: ContextType) => string | null)
 
-export type Option<ValueType = NotUndefined> = {
-  label: string
+export type Option<ValueType = any> = {
   value: ValueType
+  label: string
   disabled?: boolean
 }

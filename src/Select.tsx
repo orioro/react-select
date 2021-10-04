@@ -15,13 +15,11 @@ import { applyIfFunction } from './util'
 
 import {
   SelectProps,
-  SelectType,
   SelectComponents,
   SelectComponentStyles,
   ComponentStyleType,
   SelectContext,
   Option,
-  NotUndefined,
 } from './types'
 
 type AnyObject = {
@@ -29,17 +27,21 @@ type AnyObject = {
 }
 
 const stateReducer = (
-  _state: AnyObject,
+  state: AnyObject,
   { changes, type }: { changes: AnyObject; type: string }
 ) => {
   switch (type) {
+    // Prevent searchText/inputValue from changing whenever selected item changes
+    case useCombobox.stateChangeTypes.ControlledPropUpdatedSelectedItem: // eslint-disable-line no-fallthrough
+      return {
+        ...changes,
+        inputValue: state.inputValue,
+      }
+
     // Reset inputValue whenever user selects item
     // either through enter keydown or mouse click
     case useCombobox.stateChangeTypes.InputKeyDownEnter:
     case useCombobox.stateChangeTypes.ItemClick:
-
-    // Prevent searchText/inputValue from initializing with the full value
-    case useCombobox.stateChangeTypes.ControlledPropUpdatedSelectedItem: // eslint-disable-line no-fallthrough
 
     // Prevent searchText/inputValue from having an incomplete value (set it to '' on blur)
     case useCombobox.stateChangeTypes.InputBlur: // eslint-disable-line no-fallthrough
@@ -86,27 +88,25 @@ const defaultClassNames = {
   ClearButton: ClearButtonStyle(),
 }
 
-function _optionToString<ValueType = NotUndefined>(
-  option: Option<ValueType> | null
-) {
+function _optionToString<ValueType = any>(option: Option<ValueType> | null) {
   return option === null ? '' : option.label
 }
 
-export function Select<ValueType = NotUndefined>({
+export function Select<ValueType = any>({
   label,
   placeholder = '',
   info,
   options,
 
-  value,
-  onSetValue,
+  selectedOption,
+  onSelectOption,
 
   onSearchTextChange,
   textInputProps = {},
 
   components = {},
   classNames = {},
-}: SelectProps) {
+}: SelectProps): React.ReactElement {
   const _components = useMemo(
     () => ({
       ...defaultComponents,
@@ -134,7 +134,6 @@ export function Select<ValueType = NotUndefined>({
 
     // State
     isOpen,
-    selectedItem: selectedOption,
     highlightedIndex,
     inputValue: searchText,
 
@@ -152,20 +151,23 @@ export function Select<ValueType = NotUndefined>({
     items: options,
     itemToString: _optionToString,
 
-    selectedItem: useMemo(
-      () => options.find((option) => option.value === value) || null,
-      [options, value]
-    ),
+    selectedItem: useMemo(() => {
+      return selectedOption === null
+        ? null
+        : options.find((option) => option.value === selectedOption.value) ||
+            selectedOption
+    }, [selectedOption, options]),
     onSelectedItemChange: ({ selectedItem }) =>
-      onSetValue(
+      onSelectOption(
         selectedItem === undefined || selectedItem === null
           ? null
-          : selectedItem.value
+          : selectedItem
       ),
 
-    onInputValueChange: ({ inputValue, type }) => {
+    initialInputValue: '',
+    onInputValueChange: ({ inputValue }) => {
       onSearchTextChange(inputValue ? inputValue : '')
-    }
+    },
   })
 
   const selectContext: SelectContext = {
@@ -175,10 +177,9 @@ export function Select<ValueType = NotUndefined>({
         highlightedIndex,
         searchText,
         selectedOption,
-        value,
         options,
       }),
-      [isOpen, highlightedIndex, searchText, value, options, selectedOption]
+      [isOpen, highlightedIndex, searchText, options, selectedOption]
     ),
     actions: {
       closeMenu,
@@ -210,7 +211,7 @@ export function Select<ValueType = NotUndefined>({
           className={applyIfFunction(_classNames.TextInput, selectContext)}
           inputProps={getInputProps({
             ...textInputProps,
-            placeholder: value ? '' : placeholder,
+            placeholder: selectedOption ? '' : placeholder,
             onFocus: () => {
               if (!isOpen) {
                 openMenu()
@@ -219,7 +220,7 @@ export function Select<ValueType = NotUndefined>({
           })}
         />
 
-        {(value !== null || searchText !== '') && !isOpen ? (
+        {(selectedOption !== null || searchText !== '') && !isOpen ? (
           <_components.ClearButton {...selectContext} />
         ) : null}
 

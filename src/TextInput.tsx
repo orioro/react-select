@@ -48,11 +48,7 @@ export const TextInputStyle =
     }
   `)
 
-export const TextInput: TextInputType = ({
-  className,
-  inputProps,
-  state,
-}) => (
+export const TextInput: TextInputType = ({ className, inputProps, state }) => (
   <div className={className}>
     <input {...inputProps} />
     {!state.isOpen && state.selectedOption && (

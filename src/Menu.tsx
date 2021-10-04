@@ -33,10 +33,7 @@ export const Menu: MenuType = ({
     <ul className={className} {...menuProps}>
       {isOpen &&
         options.map((option, index) => (
-          <li
-            key={option.label}
-            {...getOptionDomProps({ option, index })}
-          >
+          <li key={option.label} {...getOptionDomProps({ option, index })}>
             {renderOption({
               option,
               index,

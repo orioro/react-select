@@ -11,7 +11,6 @@ export type SelectState<ValueType = any> = {
   isOpen: boolean
   highlightedIndex: number
   searchText: string
-  value: ValueType
   selectedOption: Option<ValueType> | null
   options: Option<ValueType>[]
 }
@@ -147,8 +146,8 @@ export type SelectProps<ValueType = any> = {
   placeholder?: string
   info: ReactNode
 
-  value: ValueType | null
-  onSetValue: (newValue: ValueType | null) => void
+  selectedOption: Option<ValueType> | null
+  onSelectOption: (option: Option<ValueType> | null) => void
 
   onSearchTextChange: FnOnSearchTextChange
   textInputProps?: PlainObject

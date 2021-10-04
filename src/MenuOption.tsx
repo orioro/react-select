@@ -27,7 +27,6 @@ export const MenuOptionStyle =
       isHighlighted ? highlightStyle : {},
     ])
 
-export const MenuOption: MenuOptionType = ({
-  option,
-  className,
-}) => <div className={className}>{option.label}</div>
+export const MenuOption: MenuOptionType = ({ option, className }) => (
+  <div className={className}>{option.label}</div>
+)
