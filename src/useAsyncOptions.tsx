@@ -134,6 +134,7 @@ export function useAsyncOptions<ValueType = any>({
     info: React.ReactNode
   },
   {
+    searchText: string
     isLoading: boolean
     error: Error | null
   }
@@ -158,6 +159,7 @@ export function useAsyncOptions<ValueType = any>({
         : null,
     },
     {
+      searchText,
       isLoading,
       error,
     },
